@@ -19,7 +19,7 @@ Sources: Ashcraft (1982), Crawford (2004), Hasselbring et al. (1988).
 
 1. Present **2–4 new facts** plus a handful of review facts.  
 2. Kid has **3 s** to answer; if silent or wrong, show the correct answer.  
-3. After each minute-long “flash round” compute Correct-Per-Minute (CPM).  
+3. After each minute-long "flash round" compute Correct-Per-Minute (CPM).  
 4. When CPM ≥ mastery threshold **two sessions in a row**, unlock the next set.
 
 *(The fact order, review spacing, and mastery targets live in
@@ -44,18 +44,63 @@ changes.)*
 
 ## Getting started (dev)
 
-> **Prerequisites:** Docker Desktop (or podman), VS Code + “Dev Containers” extension  
+> **Prerequisites:** Docker Desktop (or podman), VS Code + "Dev Containers" extension  
 > _No global Python or Node installs needed._
 
 ```bash
-# 1. Clone & open the project in VS Code
+# 1. Clone the repository
 git clone https://github.com/<your-org>/ZapMath.git
-code ZapMath
+cd ZapMath
 
-# 2. Click “Reopen in Container” when prompted
+# 2. Open in VS Code
+code .
+
+# 3. Click "Reopen in Container" when prompted
 #    – VS Code builds the image (first run ≈ 2-3 min).
 
-# 3. Inside the container terminal:
-npm run dev       # React/Vite on http://localhost:5173
-python -m uvicorn api.main:app --reload --port 8000
-# Live reload works for both front- & back-end.
+# 4. The development environment will automatically:
+#    - Install all dependencies
+#    - Start the frontend dev server (http://localhost:5173)
+#    - Start the backend server (http://localhost:8000)
+#    - Enable hot-reloading for both
+
+# 5. Run tests
+# In the container terminal:
+cd frontend && npm test  # Frontend tests
+cd ../api && pytest      # Backend tests
+```
+
+## Development Workflow
+
+1. **Frontend Development**:
+   - Edit files in `frontend/src/`
+   - Tests in `frontend/__tests__/`
+   - Hot-reloading enabled
+
+2. **Backend Development**:
+   - Edit files in `api/`
+   - Tests in `api/tests/`
+   - Hot-reloading enabled
+
+3. **CI/CD**:
+   - GitHub Actions runs tests on push/PR
+   - Checks both frontend and backend tests
+
+## Project Structure
+
+```
+/
+├─ api/                   # FastAPI back-end
+│  ├─ main.py             # /health route returns {"status":"ok"}
+│  └─ tests/test_health.py
+├─ frontend/              # React + Vite
+│  ├─ src/App.tsx         # renders "ZapMath"
+│  └─ __tests__/App.test.tsx
+├─ progression.json       # fact sets & mastery targets
+├─ .github/workflows/ci.yml
+├─ Dockerfile             # multi-stage: build React, serve with FastAPI
+├─ docker-compose.yml     # one service 'app'
+├─ .devcontainer/devcontainer.json
+├─ requirements.txt       # back-end deps
+└─ README.md              # this file
+```

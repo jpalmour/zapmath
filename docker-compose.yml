@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+      - ./frontend:/app/frontend
+    environment:
+      - PYTHONPATH=/app
+      - NODE_ENV=development
+    command: >
+      sh -c "cd /app/frontend && npm install && npm run dev &
+             cd /app && uvicorn api.main:app --reload --host 0.0.0.0 --port 8000" 
