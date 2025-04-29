@@ -1,0 +1,16 @@
+{
+    "$schema": "https://raw.githubusercontent.com/getcursor/cursor-rules/main/v1.json",
+    "rules": [
+      // ---------- Python back-end ----------
+      { "match": "api/**",      "style": "python" },
+      { "match": "api/**",      "requireTests": true },
+  
+      // ---------- TypeScript front-end ----------
+      { "match": "frontend/**", "style": "typescript-strict" },
+      { "match": "frontend/**", "requireTests": true },
+  
+      // ---------- Fallback & guardrails ----------
+      { "match": "**/*",        "requireTests": true },
+      { "onlyProject": true }
+    ]
+  }
